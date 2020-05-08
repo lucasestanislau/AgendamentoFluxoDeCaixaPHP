@@ -1,0 +1,132 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema barbearia
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema barbearia
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `barbearia` DEFAULT CHARACTER SET utf8 ;
+USE `barbearia` ;
+
+-- -----------------------------------------------------
+-- Table `barbearia`.`funcionario`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `barbearia`.`funcionario` (
+  `id_funcionario` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(95) NOT NULL,
+  `email` VARCHAR(70) NULL,
+  `telefone` VARCHAR(19) NULL,
+  `atendimentos` INT NULL,
+  `endereco` TEXT NULL,
+  `documento` VARCHAR(25) NULL,
+  `status` INT NULL,
+  `porcentagem_comissao` DOUBLE NULL,
+  PRIMARY KEY (`id_funcionario`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `barbearia`.`cliente`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `barbearia`.`cliente` (
+  `id_cliente` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nome_cliente` VARCHAR(45) NULL,
+  `telefone` VARCHAR(19) NULL,
+  PRIMARY KEY (`id_cliente`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `barbearia`.`servico`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `barbearia`.`servico` (
+  `id_servico` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `descricao` VARCHAR(75) NOT NULL,
+  `valor` DOUBLE NULL,
+  PRIMARY KEY (`id_servico`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `barbearia`.`agenda`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `barbearia`.`agenda` (
+  `id_agenda` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nome_cliente` VARCHAR(75) NULL,
+  `telefone` VARCHAR(75) NULL,
+  `data_hora` DATETIME NOT NULL,
+  `status_agendamento` INT NULL,
+  `cliente_id_cliente` INT UNSIGNED NULL,
+  `servico_id_servico` INT UNSIGNED NULL,
+  `funcionario_id_funcionario` INT UNSIGNED NULL,
+  PRIMARY KEY (`id_agenda`),
+  INDEX `fk_agenda_cliente1_idx` (`cliente_id_cliente` ASC) VISIBLE,
+  INDEX `fk_agenda_servico1_idx` (`servico_id_servico` ASC) VISIBLE,
+  INDEX `fk_agenda_funcionario1_idx` (`funcionario_id_funcionario` ASC) VISIBLE,
+  CONSTRAINT `fk_agenda_cliente1`
+    FOREIGN KEY (`cliente_id_cliente`)
+    REFERENCES `barbearia`.`cliente` (`id_cliente`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_agenda_servico1`
+    FOREIGN KEY (`servico_id_servico`)
+    REFERENCES `barbearia`.`servico` (`id_servico`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_agenda_funcionario1`
+    FOREIGN KEY (`funcionario_id_funcionario`)
+    REFERENCES `barbearia`.`funcionario` (`id_funcionario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `barbearia`.`entrada`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `barbearia`.`entrada` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `descricao` TEXT NOT NULL,
+  `valor` DOUBLE NOT NULL,
+  `data` DATE NOT NULL,
+  `funcionario_id_funcionario` INT UNSIGNED NULL,
+  `status` INT UNSIGNED NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_entrada_funcionario1_idx` (`funcionario_id_funcionario` ASC) VISIBLE,
+  CONSTRAINT `fk_entrada_funcionario1`
+    FOREIGN KEY (`funcionario_id_funcionario`)
+    REFERENCES `barbearia`.`funcionario` (`id_funcionario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `barbearia`.`saida`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `barbearia`.`saida` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `descricao` TEXT NOT NULL,
+  `valor` DOUBLE NOT NULL,
+  `data` DATE NOT NULL,
+  `funcionario_id_funcionario` INT UNSIGNED NULL,
+  `status` INT UNSIGNED NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_saida_funcionario1_idx` (`funcionario_id_funcionario` ASC) VISIBLE,
+  CONSTRAINT `fk_saida_funcionario1`
+    FOREIGN KEY (`funcionario_id_funcionario`)
+    REFERENCES `barbearia`.`funcionario` (`id_funcionario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
